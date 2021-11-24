@@ -10,9 +10,22 @@
 void ble_our_service_on_ble_evt(ble_evt_t const * p_ble_evt, void * p_context)
 {
   	ble_os_t * p_our_service =(ble_os_t *) p_context;  
-		// OUR_JOB: Step 3.D Implement switch case handling BLE events related to our service. 
+
+
+	// OUR_JOB: Step 3.D Implement switch case handling BLE events related to our service. 
 	
-	
+	switch (p_ble_evt->header.evt_id)
+        {
+            case BLE_GAP_EVT_CONNECTED:
+              p_our_service->conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
+              break;
+            case BLE_GAP_EVT_DISCONNECTED:
+              p_our_service->conn_handle = BLE_CONN_HANDLE_INVALID;
+              break;
+            default:
+              // No implementation needed.
+              break;
+        }
 }
 
 /**@brief Function for adding our new characterstic to "Our service" that we initiated in the previous tutorial. 
@@ -316,6 +329,11 @@ static uint32_t our_char_5_add(ble_os_t * p_our_service)
 
     ble_gatts_attr_md_t cccd_md;
     memset(&cccd_md, 0, sizeof(cccd_md));
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.write_perm);
+    cccd_md.vloc                = BLE_GATTS_VLOC_STACK;    
+    char_md.p_cccd_md           = &cccd_md;
+    char_md.char_props.notify   = 1;
 
     
     // OUR_JOB: Step 2.B, Configure the attribute metadata
@@ -378,6 +396,8 @@ void our_service_init(ble_os_t * p_our_service)
     
     // OUR_JOB: Step 3.B, Set our service connection handle to default value. I.e. an invalid handle since we are not yet in a connection.
 	
+    p_our_service->conn_handle = BLE_CONN_HANDLE_INVALID;
+
 
     // FROM_SERVICE_TUTORIAL: Add our service
 		err_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,
@@ -399,5 +419,18 @@ void our_temperature_characteristic_update(ble_os_t *p_our_service, int32_t *tem
 {
     // OUR_JOB: Step 3.E, Update characteristic value
 
+    if (p_our_service->conn_handle != BLE_CONN_HANDLE_INVALID)
+    {
+        uint16_t               len = 4;
+        ble_gatts_hvx_params_t hvx_params;
+        memset(&hvx_params, 0, sizeof(hvx_params));
 
+        hvx_params.handle = p_our_service->char_5_handles.value_handle;
+        hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
+        hvx_params.offset = 0;
+        hvx_params.p_len  = &len;
+        hvx_params.p_data = (uint8_t*)temperature_value;  
+
+        sd_ble_gatts_hvx(p_our_service->conn_handle, &hvx_params);
+    }
 }
