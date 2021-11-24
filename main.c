@@ -70,7 +70,7 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
-#include "our_service.h"
+#include "our_service.h" 
 
 
 #define DEVICE_NAME                     "OurCharacteristic"                       /**< Name of device. Will be included in the advertising data. */
