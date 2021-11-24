@@ -464,7 +464,12 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
 static void on_write( ble_evt_t const * p_ble_evt)
 {
     ble_gatts_evt_write_t const * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
+    NRF_LOG_INFO("Write to UUID:");
+    //NRF_LOG_HEXDUMP_INFO(p_evt_write->uuid.uuid, 2);
+    NRF_LOG_INFO("0x%x", p_evt_write->uuid.uuid);
+    NRF_LOG_INFO("value:");
     NRF_LOG_HEXDUMP_INFO(p_evt_write->data, p_evt_write->len);
+    
 }
 
 

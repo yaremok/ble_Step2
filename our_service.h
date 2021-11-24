@@ -11,7 +11,11 @@
 #define BLE_UUID_OUR_SERVICE_UUID                0xF00D // Just a random, but recognizable value
 
 // ALREADY_DONE_FOR_YOU: Defining 16-bit characteristic UUID
-#define BLE_UUID_OUR_CHARACTERISTC_UUID          0xBEEF // Just a random, but recognizable value
+#define BLE_UUID_OUR_CHARACTERISTC_1_UUID          0xB001
+#define BLE_UUID_OUR_CHARACTERISTC_2_UUID          0xB002
+#define BLE_UUID_OUR_CHARACTERISTC_3_UUID          0xB003
+#define BLE_UUID_OUR_CHARACTERISTC_4_UUID          0xB004
+#define BLE_UUID_OUR_CHARACTERISTC_5_UUID          0xB005
 
 // This structure contains various status information for our service. 
 // The name is based on the naming convention used in Nordics SDKs. 
@@ -23,7 +27,11 @@ typedef struct
     uint16_t                    service_handle; /**< Handle of Our Service (as provided by the BLE stack). */
     // OUR_JOB: Step 2.D, Add handles for the characteristic attributes to our struct
 
-    ble_gatts_char_handles_t    char_handles;
+    ble_gatts_char_handles_t    char_1_handles;
+    ble_gatts_char_handles_t    char_2_handles;
+    ble_gatts_char_handles_t    char_3_handles;
+    ble_gatts_char_handles_t    char_4_handles;
+    ble_gatts_char_handles_t    char_5_handles;
 }ble_os_t;
 
 /**@brief Function for handling BLE Stack events related to our service and characteristic.
