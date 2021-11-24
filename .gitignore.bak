@@ -7,9 +7,8 @@ pca10040/s132/armgcc/
 pca10040/s132/iar/
 pca10040/s132/ses/Output/
 *.eww
-*.emSession
 *.jlink
-*.xml
+
 
 # Prerequisites
 *.d
