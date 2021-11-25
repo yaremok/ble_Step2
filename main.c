@@ -108,6 +108,8 @@ BLE_ADVERTISING_DEF(m_advertising);                                             
 
 static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;                        /**< Handle of the current connection. */
 
+static int32_t my_time = 0;
+
 // FROM_SERVICE_TUTORIAL: Declare a service structure for our application
 ble_os_t m_our_service;
 
@@ -151,9 +153,8 @@ static void timer_timeout_handler(void * p_context)
 {
     // OUR_JOB: Step 3.F, Update temperature and characteristic value.
 
-    int32_t temperature = 0;   
-    sd_temp_get(&temperature);
-    our_temperature_characteristic_update(&m_our_service, &temperature);
+    my_time++;
+    our_time_characteristic_update(&m_our_service, &my_time);
     nrf_gpio_pin_toggle(LED_4);
 }
 
@@ -472,7 +473,7 @@ static void on_write( ble_evt_t const * p_ble_evt)
 {
     ble_gatts_evt_write_t const * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
     NRF_LOG_INFO("Write to UUID:");
-    //NRF_LOG_HEXDUMP_INFO(p_evt_write->uuid.uuid, 2);
+    //NRF_LOG_HEXDUMP_INFO( &(p_evt_write->uuid.uuid), 2); 
     NRF_LOG_INFO("0x%x", p_evt_write->uuid.uuid);
     NRF_LOG_INFO("value:");
     NRF_LOG_HEXDUMP_INFO(p_evt_write->data, p_evt_write->len);
