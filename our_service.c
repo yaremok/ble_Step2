@@ -256,7 +256,17 @@ static uint32_t our_char_4_add(ble_os_t * p_our_service)
     char_md.char_props.read = 1;
     char_md.char_props.write = 1;
 
-    
+    ble_gatts_char_pf_t char_pf;
+
+    memset(&char_pf, 0, sizeof(char_pf));
+
+    char_pf.format = BLE_GATT_CPF_FORMAT_FLOAT32;
+    char_pf.exponent = 0;
+    char_pf.name_space = BLE_GATT_CPF_NAMESPACE_DESCRIPTION_UNKNOWN;
+    char_pf.desc = BLE_GATT_CPF_NAMESPACE_DESCRIPTION_UNKNOWN;
+    char_pf.unit = BLE_UUID_OUR_CHARACTERISTC_4_UUID;
+
+
     // OUR_JOB: Step 3.A, Configuring Client Characteristic Configuration Descriptor metadata and add to char_md structure
 
     ble_gatts_attr_md_t cccd_md;
@@ -264,6 +274,7 @@ static uint32_t our_char_4_add(ble_os_t * p_our_service)
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.write_perm);
     cccd_md.vloc                = BLE_GATTS_VLOC_STACK;    
+    char_md.p_char_pf           = &char_pf;
     char_md.p_cccd_md           = &cccd_md;
     char_md.char_props.notify   = 1;
 
@@ -287,6 +298,7 @@ static uint32_t our_char_4_add(ble_os_t * p_our_service)
     memset(&attr_char_value, 0, sizeof(attr_char_value));    
     attr_char_value.p_uuid      = &char_uuid;
     attr_char_value.p_attr_md   = &attr_md;
+    
 
 
     // OUR_JOB: Step 2.H, Set characteristic length in number of bytes

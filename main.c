@@ -227,7 +227,8 @@ void saadc_callback(nrf_drv_saadc_evt_t const * p_event)
         NRF_LOG_INFO("%d", average_voltage);
 
         //voltage = average_voltage;
-        our_voltage_characteristic_update(&m_our_service, &average_voltage);
+        float volts = 1.0 * average_voltage / 1000.0;
+        our_voltage_characteristic_update(&m_our_service, &volts);
     }
 }
 
