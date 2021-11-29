@@ -255,6 +255,11 @@ static uint32_t our_char_4_add(ble_os_t * p_our_service)
     memset(&char_md, 0, sizeof(char_md));
     char_md.char_props.read = 1;
     char_md.char_props.write = 1;
+    
+    static char user_desc[] = "Battery voltage";
+    char_md.p_char_user_desc  = (uint8_t *) user_desc;
+    char_md.char_user_desc_size = strlen(user_desc);
+    char_md.char_user_desc_max_size = strlen(user_desc);
 
     ble_gatts_char_pf_t char_pf;
 
