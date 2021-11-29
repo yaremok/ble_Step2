@@ -57,7 +57,6 @@
       <file file_name="../../../../../../components/libraries/fds/fds.c" />
       <file file_name="../../../../../../components/libraries/hardfault/hardfault_implementation.c" />
       <file file_name="../../../../../../components/libraries/util/nrf_assert.c" />
-      <file file_name="../../../../../../components/libraries/atomic_fifo/nrf_atfifo.c" />
       <file file_name="../../../../../../components/libraries/atomic_flags/nrf_atflags.c" />
       <file file_name="../../../../../../components/libraries/atomic/nrf_atomic.c" />
       <file file_name="../../../../../../components/libraries/balloc/nrf_balloc.c" />
@@ -72,6 +71,7 @@
       <file file_name="../../../../../../components/libraries/sortlist/nrf_sortlist.c" />
       <file file_name="../../../../../../components/libraries/strerror/nrf_strerror.c" />
       <file file_name="../../../../../../components/libraries/sensorsim/sensorsim.c" />
+      <file file_name="../../../../../../components/libraries/atomic_fifo/nrf_atfifo.c" />
     </folder>
     <folder Name="None">
       <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf52.s" />
@@ -90,6 +90,10 @@
       <file file_name="../../../../../../modules/nrfx/drivers/src/prs/nrfx_prs.c" />
       <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_uart.c" />
       <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_uarte.c" />
+      <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_saadc.c" />
+      <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_ppi.c" />
+      <file file_name="../../../../../../integration/nrfx/legacy/nrf_drv_ppi.c" />
+      <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_timer.c" />
     </folder>
     <folder Name="Board Support">
       <file file_name="../../../../../../components/libraries/bsp/bsp.c" />
