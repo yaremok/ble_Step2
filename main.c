@@ -107,6 +107,17 @@
 
 #define SAMPLES_IN_BUFFER 5
 
+// RESOLUTION : 12 bit;
+// Defaults for SE (single ended mode)
+// V(N) = 0;
+// GAIN = 1/6;
+// REFERENCE Voltage = internal (0.6V);
+// m = 0;
+// V(P) = ADC_RESULT x REFERENCE / ( GAIN x RESOLUTION) 
+//      = ADC_RESULT x (600 / (1/6 x 2^(12)) 
+//      = ADC_RESULT x 0.87890625;
+#define ADC_RESULT_IN_MILLI_VOLTS(ADC_RESULT) (ADC_RESULT * 0.87890625)        /**< Function used to convert the saadc resault to a voltage value. */
+
 volatile uint8_t state = 1;
 static const nrf_drv_timer_t m_timer = NRF_DRV_TIMER_INSTANCE(1);
 static nrf_saadc_value_t     m_buffer_pool[2][SAMPLES_IN_BUFFER];
@@ -198,11 +209,20 @@ void saadc_callback(nrf_drv_saadc_evt_t const * p_event)
         int i;
         NRF_LOG_INFO("ADC event number: %d", (int)m_adc_evt_counter);
 
+        int volt_summ = 0;
+
         for (i = 0; i < SAMPLES_IN_BUFFER; i++)
         {
             NRF_LOG_INFO("%d", p_event->data.done.p_buffer[i]);
+            volt_summ += p_event->data.done.p_buffer[i];
         }
+
         m_adc_evt_counter++;
+
+        int average_voltage;
+        average_voltage = ADC_RESULT_IN_MILLI_VOLTS( volt_summ / SAMPLES_IN_BUFFER );
+        NRF_LOG_INFO("Average volmage in mV:");
+        NRF_LOG_INFO("%d", average_voltage);
     }
 }
 
