@@ -49,6 +49,10 @@ void ble_our_service_on_ble_evt(ble_evt_t const * p_ble_evt, void * p_context);
  */
 void our_service_init(ble_os_t * p_our_service);
 
+
+void our_voltage_characteristic_update(ble_os_t *p_our_service, int32_t *volvage_value);
+
+
 /**@brief Function for updating and sending new characteristic values
  *
  * @details The application calls this function whenever our timer_timeout_handler triggers

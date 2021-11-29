@@ -136,6 +136,8 @@ static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;                        
 
 static int32_t my_time = 0;
 
+//int voltage = 0;
+
 // FROM_SERVICE_TUTORIAL: Declare a service structure for our application
 ble_os_t m_our_service;
 
@@ -223,6 +225,9 @@ void saadc_callback(nrf_drv_saadc_evt_t const * p_event)
         average_voltage = ADC_RESULT_IN_MILLI_VOLTS( volt_summ / SAMPLES_IN_BUFFER );
         NRF_LOG_INFO("Average volmage in mV:");
         NRF_LOG_INFO("%d", average_voltage);
+
+        //voltage = average_voltage;
+        our_voltage_characteristic_update(&m_our_service, &average_voltage);
     }
 }
 
