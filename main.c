@@ -108,7 +108,7 @@
 #define SAMPLES_IN_BUFFER 5
 
 volatile uint8_t state = 1;
-static const nrf_drv_timer_t m_timer = NRF_DRV_TIMER_INSTANCE(0);
+static const nrf_drv_timer_t m_timer = NRF_DRV_TIMER_INSTANCE(1);
 static nrf_saadc_value_t     m_buffer_pool[2][SAMPLES_IN_BUFFER];
 static nrf_ppi_channel_t     m_ppi_channel;
 static uint32_t              m_adc_evt_counter;
@@ -212,7 +212,7 @@ void saadc_init(void)
     ret_code_t err_code;
     nrf_saadc_channel_config_t channel_config =
         //NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_VDD);
-        NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN0);
+        NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN1);
 
     err_code = nrf_drv_saadc_init(NULL, saadc_callback);
     APP_ERROR_CHECK(err_code);
@@ -898,6 +898,7 @@ int main(void)
     saadc_init();
     saadc_sampling_event_init();
     saadc_sampling_event_enable();
+    NRF_LOG_INFO("SAADC HAL simple example started.");
 
     services_init();
     advertising_init();
