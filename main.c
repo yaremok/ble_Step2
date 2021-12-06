@@ -107,6 +107,9 @@
 
 #define SAMPLES_IN_BUFFER 5
 
+#define BATTARY_VOLTAGE_INPUT_PIN       NRF_SAADC_INPUT_AIN4
+//#define BATTARY_VOLTAGE_INPUT_PIN       NRF_SAADC_INPUT_VDD
+
 // RESOLUTION : 12 bit;
 // Defaults for SE (single ended mode)
 // V(N) = 0;
@@ -117,6 +120,13 @@
 //      = ADC_RESULT x (600 / (1/6 x 2^(12)) 
 //      = ADC_RESULT x 0.87890625;
 #define ADC_RESULT_IN_MILLI_VOLTS(ADC_RESULT) (ADC_RESULT * 0.87890625)        /**< Function used to convert the saadc resault to a voltage value. */
+
+#define ORANGE_LED_PIN NRF_GPIO_PIN_MAP(0, 26)
+#define SOLENOID_PIN NRF_GPIO_PIN_MAP(0, 27)
+#define OPEN_BUTTON_PIN NRF_GPIO_PIN_MAP(0, 30)
+
+
+bool is_opening = false;
 
 volatile uint8_t state = 1;
 static const nrf_drv_timer_t m_timer = NRF_DRV_TIMER_INSTANCE(1);
@@ -146,6 +156,9 @@ ble_os_t m_our_service;
 
 APP_TIMER_DEF(m_our_char_timer_id);
 #define OUR_CHAR_TIMER_INTERVAL     APP_TIMER_TICKS(1000) // 1000 ms intervals
+
+APP_TIMER_DEF(solenoid_hold_timer_id);
+#define SOLENOID_HOLD_TIMER_INTERVAL     APP_TIMER_TICKS(2000) // 2000 ms intervals
 
 
 void timer_handler(nrf_timer_event_t event_type, void * p_context)
@@ -209,19 +222,20 @@ void saadc_callback(nrf_drv_saadc_evt_t const * p_event)
         APP_ERROR_CHECK(err_code);
 
         int i;
-        NRF_LOG_INFO("ADC event number: %d", (int)m_adc_evt_counter);
+        //NRF_LOG_INFO("ADC event number: %d", (int)m_adc_evt_counter);
 
-        int volt_summ = 0;
+        uint16_t volt_summ = 0;
 
         for (i = 0; i < SAMPLES_IN_BUFFER; i++)
         {
-            NRF_LOG_INFO("%d", p_event->data.done.p_buffer[i]);
+            //NRF_LOG_INFO("%d", p_event->data.done.p_buffer[i]);
             volt_summ += p_event->data.done.p_buffer[i];
         }
 
         m_adc_evt_counter++;
 
-        int average_voltage;
+        uint16_t average_voltage;
+
         average_voltage = ADC_RESULT_IN_MILLI_VOLTS( volt_summ / SAMPLES_IN_BUFFER );
         NRF_LOG_INFO("Average volmage in mV:");
         NRF_LOG_INFO("%d", average_voltage);
@@ -237,8 +251,8 @@ void saadc_init(void)
 {
     ret_code_t err_code;
     nrf_saadc_channel_config_t channel_config =
-        //NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_VDD);
-        NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN1);
+    //NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_VDD);
+    NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(BATTARY_VOLTAGE_INPUT_PIN);
 
     err_code = nrf_drv_saadc_init(NULL, saadc_callback);
     APP_ERROR_CHECK(err_code);
@@ -292,6 +306,16 @@ static void timer_timeout_handler(void * p_context)
     my_time++;
     our_time_characteristic_update(&m_our_service, &my_time);
     nrf_gpio_pin_toggle(LED_4);
+}
+
+
+static void solenoid_hold_timer_timeout_handler(void * p_context)
+{
+    is_opening = false;
+    nrf_gpio_pin_clear(SOLENOID_PIN);
+    nrf_gpio_pin_clear(ORANGE_LED_PIN);
+    uint8_t opened_state = 0;
+    our_solenoid_characteristic_update(&m_our_service, &opened_state);
 }
 
 
@@ -408,6 +432,8 @@ static void timers_init(void)
     // OUR_JOB: Step 3.H, Initiate our timer
 
     app_timer_create(&m_our_char_timer_id, APP_TIMER_MODE_REPEATED, timer_timeout_handler);
+
+    app_timer_create(&solenoid_hold_timer_id, APP_TIMER_MODE_SINGLE_SHOT, solenoid_hold_timer_timeout_handler);
 }
 
 
@@ -600,6 +626,14 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
 }
 
 
+void do_open(void)
+{
+    is_opening = true;
+    nrf_gpio_pin_set(SOLENOID_PIN);
+    nrf_gpio_pin_set(ORANGE_LED_PIN);
+    app_timer_start(solenoid_hold_timer_id, SOLENOID_HOLD_TIMER_INTERVAL, NULL);
+}
+
 
 /**@brief Function for handling the Write event.
  *
@@ -613,6 +647,21 @@ static void on_write( ble_evt_t const * p_ble_evt)
     NRF_LOG_INFO("0x%x", p_evt_write->uuid.uuid);
     NRF_LOG_INFO("value:");
     NRF_LOG_HEXDUMP_INFO(p_evt_write->data, p_evt_write->len);
+
+    switch (p_evt_write->uuid.uuid)
+    {
+        case BLE_UUID_OUR_CHARACTERISTC_3_UUID:
+          if (!is_opening && p_evt_write->data[0] != 0)
+          {
+             do_open();
+            
+          }
+          break;
+
+        default:
+          break;
+    }
+    // BLE_UUID_OUR_CHARACTERISTC_3_UUID
     
 }
 
@@ -851,6 +900,10 @@ static void buttons_leds_init(bool * p_erase_bonds)
     APP_ERROR_CHECK(err_code);
 
     *p_erase_bonds = (startup_event == BSP_EVENT_CLEAR_BONDING_DATA);
+
+    nrf_gpio_cfg_output(SOLENOID_PIN);
+    nrf_gpio_cfg_output(ORANGE_LED_PIN);
+    nrf_gpio_cfg_input(OPEN_BUTTON_PIN, NRF_GPIO_PIN_PULLUP);
 }
 
 

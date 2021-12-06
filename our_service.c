@@ -193,6 +193,13 @@ static uint32_t our_char_3_add(ble_os_t * p_our_service)
 
     ble_gatts_attr_md_t cccd_md;
     memset(&cccd_md, 0, sizeof(cccd_md));
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.write_perm);
+    cccd_md.vloc                = BLE_GATTS_VLOC_STACK;
+    char_md.p_cccd_md           = &cccd_md;
+    char_md.char_props.notify   = 1;
+
+
 
     
     // OUR_JOB: Step 2.B, Configure the attribute metadata
@@ -434,6 +441,25 @@ void our_service_init(ble_os_t * p_our_service)
     our_char_3_add(p_our_service);
     our_char_4_add(p_our_service);
     our_char_5_add(p_our_service);
+}
+
+
+void our_solenoid_characteristic_update(ble_os_t *p_our_service, int32_t *solenoid_value)
+{
+    if (p_our_service->conn_handle != BLE_CONN_HANDLE_INVALID)
+    {
+        uint16_t               len = 4;
+        ble_gatts_hvx_params_t hvx_params;
+        memset(&hvx_params, 0, sizeof(hvx_params));
+
+        hvx_params.handle = p_our_service->char_3_handles.value_handle;
+        hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
+        hvx_params.offset = 0;
+        hvx_params.p_len  = &len;
+        hvx_params.p_data = (uint8_t*)solenoid_value;  
+
+        sd_ble_gatts_hvx(p_our_service->conn_handle, &hvx_params);
+    }
 }
 
 
