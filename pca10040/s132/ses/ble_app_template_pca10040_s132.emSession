@@ -2,8 +2,6 @@
 <session>
  <Bookmarks/>
  <Breakpoints groups="Breakpoints" active_group="Breakpoints">
-  <BreakpointListItem trigger="" line="129" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="4" filename="../../../main.c" useHWbreakpoint="false"/>
-  <BreakpointListItem trigger="" line="132" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="4" filename="../../../main.c" useHWbreakpoint="false"/>
   <Exceptions set="MemManage;UsageFault_Coprocessor;UsageFault_CheckingError;UsageFault_StateError;BusFault;ExceptionEntryReturnFault;HardFault"/>
  </Breakpoints>
  <ExecutionProfileWindow/>
@@ -51,9 +49,9 @@
  </TraceWindow>
  <Watch1>
   <Watches active="1" update="Never">
-   <Watchpoint expression="err_code" name="err_code" radix="-1" linenumber="179" filename="../../../main.c"/>
-   <Watchpoint expression="p_buffer" name="p_buffer" radix="16" linenumber="234" filename="../../../main.c"/>
-   <Watchpoint expression="average_voltage" name="average_voltage" radix="-1" linenumber="245" filename="../../../main.c"/>
+   <Watchpoint expression="err_code" name="err_code" radix="-1" linenumber="183" filename="../../../main.c"/>
+   <Watchpoint expression="p_buffer" name="p_buffer" radix="16" linenumber="238" filename="../../../main.c"/>
+   <Watchpoint expression="average_voltage" name="average_voltage" radix="-1" linenumber="249" filename="../../../main.c"/>
   </Watches>
  </Watch1>
  <Watch2>
@@ -66,9 +64,9 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="964" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="951" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="41" y="15" useTextEdit="1" openedFrom="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/ble_app_template/our_service.c" useBinaryEdit="0" left="0" path="../../../our_service.h" selected="0" top="9" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="55" y="197" useTextEdit="1" openedFrom="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/ble_app_template/main.c" useBinaryEdit="0" left="0" path="../../../our_service.c" selected="0" top="183" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="71" y="258" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="240" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="41" y="15" useTextEdit="1" openedFrom="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/ble_app_template/our_service.c" useBinaryEdit="0" left="0" path="../../../our_service.h" selected="0" top="27" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="55" y="197" useTextEdit="1" openedFrom="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/ble_app_template/main.c" useBinaryEdit="0" left="0" path="../../../our_service.c" selected="0" top="123" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="12" y="5371" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="0" top="5461" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="99" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/util/app_error_weak.c" selected="0" top="86" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="21" y="257" useTextEdit="1" openedFrom="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/ble_app_template/our_service.c" useBinaryEdit="0" left="0" path="../../../../../../components/softdevice/s132/headers/ble_gatts.h" selected="0" top="248" codecName="Default"/>
@@ -92,11 +90,13 @@
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="197" useTextEdit="1" openedFrom="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/ble_app_template/our_service.c" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/log/src/nrf_log_str_formatter.c" selected="0" top="191" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="8" y="176" useTextEdit="1" openedFrom="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/ble_app_template/our_service.c" useBinaryEdit="0" left="0" path="../../../../../../components/softdevice/s132/headers/ble_gatt.h" selected="0" top="152" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="23" y="105" useTextEdit="1" openedFrom="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/ble_app_template/main.c" useBinaryEdit="0" left="0" path="../../../../../../modules/nrfx/hal/nrf_gpio.h" selected="0" top="91" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="24" y="49" useTextEdit="1" openedFrom="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/ble_app_template/main.c" useBinaryEdit="0" left="0" path="../../../../../../components/boards/pca10040.h" selected="0" top="46" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="8" y="77" useTextEdit="1" openedFrom="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/ble_app_template/main.c" useBinaryEdit="0" left="0" path="../../../../../../components/boards/pca10040.h" selected="0" top="53" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="38" y="307" useTextEdit="1" openedFrom="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/ble_app_template/main.c" useBinaryEdit="0" left="0" path="../../../../../../modules/nrfx/mdk/nrf52832_peripherals.h" selected="0" top="285" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="325" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../../../components/softdevice/s132/headers/nrf_sdm.h" selected="0" top="312" codecName=""/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="325" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../../../components/softdevice/s132/headers/nrf_sdm.h" selected="0" top="312" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="616" useTextEdit="1" openedFrom="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/ble_app_template/main.c" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/timer/app_timer2.c" selected="0" top="602" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="236" useTextEdit="1" openedFrom="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/ble_app_template/main.c" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/bsp/bsp_btn_ble.c" selected="0" top="221" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" openedFrom="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/ble_app_template/main.c" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/bsp/bsp_btn_ble.h" selected="0" top="12" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="26" y="306" useTextEdit="1" openedFrom="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/ble_app_template/main.c" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/button/app_button.c" selected="0" top="294" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="ble_app_template_pca10040_s132" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="D:/INSTALL/Nordic_BLE/DeviceDownload/step2/nRF5_SDK_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560/modules/nrfx/drivers/src" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>

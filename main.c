@@ -57,6 +57,7 @@
 #include "nrf_sdh_soc.h"
 #include "nrf_sdh_ble.h"
 #include "app_timer.h"
+#include "app_button.h"
 #include "fds.h"
 #include "peer_manager.h"
 #include "bsp_btn_ble.h"
@@ -77,7 +78,7 @@
 #include "nrf_drv_timer.h"
 
 
-#define DEVICE_NAME                     "OurCharacteristic"                       /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME                     "DogLock_v01"                       /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME               "NordicSemiconductor"                   /**< Manufacturer. Will be passed to Device Information Service. */
 #define APP_ADV_INTERVAL                300                                     /**< The advertising interval (in units of 0.625 ms. This value corresponds to 187.5 ms). */
 
@@ -125,6 +126,7 @@
 #define SOLENOID_PIN NRF_GPIO_PIN_MAP(0, 27)
 #define OPEN_BUTTON_PIN NRF_GPIO_PIN_MAP(0, 30)
 
+#define BUTTON_DETECTION_DELAY          APP_TIMER_TICKS(50)                     /**< Delay from a GPIOTE event until a button is reported as pushed (in number of timer ticks). */
 
 bool is_opening = false;
 
@@ -137,6 +139,8 @@ static uint32_t              m_adc_evt_counter;
 NRF_BLE_GATT_DEF(m_gatt);                                                       /**< GATT module instance. */
 NRF_BLE_QWR_DEF(m_qwr);                                                         /**< Context for the Queued Write module.*/
 BLE_ADVERTISING_DEF(m_advertising);                                             /**< Advertising module instance. */
+
+//BLE_LBS_DEF(m_lbs);                                                             /**< Onboard Open Button Service instance. */
 
 APP_TIMER_DEF(m_saadc_timer_id);                                                /**< Potentio timer. */
 APP_TIMER_DEF(m_battery_timer_id);                                              /**< Battery timer. */
@@ -494,9 +498,7 @@ static void nrf_qwr_error_handler(uint32_t nrf_error)
  */
 static void services_init(void)
 {
-
-	
-	uint32_t         err_code;
+    uint32_t         err_code;
     nrf_ble_qwr_init_t qwr_init = {0};
 
     // Initialize Queued Write Module.
@@ -508,6 +510,8 @@ static void services_init(void)
     //FROM_SERVICE_TUTORIAL: Add code to initialize the services used by the application.
     our_service_init(&m_our_service);
 
+    //err_code = ble_lbs_init(&m_lbs, &init);
+    //APP_ERROR_CHECK(err_code);
 }
 
 
@@ -884,6 +888,47 @@ static void advertising_init(void)
 }
 
 
+/**@brief Function for handling events from the button handler module.
+ *
+ * @param[in] pin_no        The pin that the event applies to.
+ * @param[in] button_action The button action (press/release).
+ */
+static void button_event_handler(uint8_t pin_no, uint8_t button_action)
+{
+    ret_code_t err_code;
+
+    switch (pin_no)
+    {
+        case OPEN_BUTTON_PIN:
+            NRF_LOG_INFO("Button No: %d", pin_no);
+            NRF_LOG_INFO("ctionn: %d", button_action);
+
+            if (pin_no == OPEN_BUTTON_PIN && button_action == 1)
+            {
+                if (!is_opening)
+                {
+                    do_open();
+                }
+            }
+
+            //err_code = ble_lbs_on_button_change(m_conn_handle, &m_lbs, button_action);
+            //if (err_code != NRF_SUCCESS &&
+            //    err_code != BLE_ERROR_INVALID_CONN_HANDLE &&
+            //    err_code != NRF_ERROR_INVALID_STATE &&
+            //    err_code != BLE_ERROR_GATTS_SYS_ATTR_MISSING)
+            //{
+            //    APP_ERROR_CHECK(err_code);
+            //}
+
+            break;
+
+        default:
+            APP_ERROR_HANDLER(pin_no);
+            break;
+    }
+}
+
+
 /**@brief Function for initializing buttons and leds.
  *
  * @param[out] p_erase_bonds  Will be true if the clear bonding button was pressed to wake the application up.
@@ -893,8 +938,8 @@ static void buttons_leds_init(bool * p_erase_bonds)
     ret_code_t err_code;
     bsp_event_t startup_event;
 
-    err_code = bsp_init(BSP_INIT_LEDS | BSP_INIT_BUTTONS, bsp_event_handler);
-    APP_ERROR_CHECK(err_code);
+    //err_code = bsp_init(BSP_INIT_LEDS | BSP_INIT_BUTTONS, bsp_event_handler);
+    //APP_ERROR_CHECK(err_code);
 
     err_code = bsp_btn_ble_init(NULL, &startup_event);
     APP_ERROR_CHECK(err_code);
@@ -903,7 +948,18 @@ static void buttons_leds_init(bool * p_erase_bonds)
 
     nrf_gpio_cfg_output(SOLENOID_PIN);
     nrf_gpio_cfg_output(ORANGE_LED_PIN);
-    nrf_gpio_cfg_input(OPEN_BUTTON_PIN, NRF_GPIO_PIN_PULLUP);
+    //nrf_gpio_cfg_input(OPEN_BUTTON_PIN, NRF_GPIO_PIN_PULLUP);
+    //nrf_gpio_cfg_output(OPEN_BUTTON_PIN);
+
+
+    //The array must be static because a pointer to it will be saved in the button handler module.
+    static app_button_cfg_t buttons[] =
+    {
+        {OPEN_BUTTON_PIN, false, BUTTON_PULL, button_event_handler}
+    };
+
+    err_code = app_button_init(buttons, ARRAY_SIZE(buttons), BUTTON_DETECTION_DELAY);
+    APP_ERROR_CHECK(err_code);
 }
 
 
@@ -992,6 +1048,10 @@ int main(void)
     application_timers_start();
 
     advertising_start(erase_bonds);
+
+    app_button_enable();
+
+    //nrf_gpio_pin_set(OPEN_BUTTON_PIN);
 
     // Enter main loop.
     for (;;)
